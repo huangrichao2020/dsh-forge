@@ -26,23 +26,38 @@
 
 这是一个目录式 skill，核心是 `SKILL.md`。
 
-**Claude Code**
-
-```bash
-git clone https://github.com/huangrichao2020/dsh-forge ~/.claude/skills/industry-workbench-forge
-```
-
 **DSH / DeepSeek Harness**
 
 ```bash
-git clone https://github.com/huangrichao2020/dsh-forge ~/.dsh/skills/industry-workbench-forge
+git clone git@github.com:huangrichao2020/dsh-forge.git ~/.dsh/skills/industry-workbench-forge
 ```
 
-**Codex / Cursor / 其他 agent**
+**Claude Code / Codex / Gemini CLI / Qwen Code / opencode**
 
-把仓库目录放到任意位置，在会话里让 agent 先读 `SKILL.md`：
+```bash
+git clone git@github.com:huangrichao2020/dsh-forge.git ~/.claude/skills/industry-workbench-forge
+```
+
+目录名换成对应的：`~/.codex/skills/`、`~/.gemini/skills/`、`~/.qwen/skills/`、`~/.opencode/skills/`。
+通用标准是 `~/.agents/skills/`，多数新 agent 都认这个。
+
+**任何 agent（连目录约定都不讲究的）**
+
+把仓库放任意位置，让 agent 先读 `SKILL.md`：
 
 > 读一下 `<path>/SKILL.md`，然后按它的流程给我做 <需求>
+
+**一条命令装到所有已装 agent**（本机实测）：
+
+```bash
+SRC=~/.dsh/skills/industry-workbench-forge
+for base in ~/.agents ~/.claude ~/.codex ~/.gemini ~/.qwen ~/.opencode; do
+  mkdir -p "$base/skills"
+  ln -sfn "$SRC" "$base/skills/industry-workbench-forge"
+done
+```
+
+> HTTPS 克隆在部分网络下很慢或超时，用 SSH 协议更稳（`git@github.com:...`）。
 
 skill 不依赖宿主专有 API：`SKILL.md` 是流程与判断标准，`build.mjs` 是普通 node 脚本，不需要 npm install。
 
